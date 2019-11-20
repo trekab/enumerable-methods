@@ -71,10 +71,10 @@ module Enumerable
   end
 
   def my_inject(*args)
-    init = args.size > 0
+    init = args.size.positive?
     acc = init ? args[0] : self[0]
     drop(init ? 0 : 1).my_each { |item| acc = yield(acc, item) }
-    return acc
+    acc
   end
 end
 
