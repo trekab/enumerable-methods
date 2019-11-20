@@ -35,6 +35,8 @@ module Enumerable
   end
 
   def my_any?
+    return true unless block_given?
+    
     my_each { |item| return true if yield(item) }
     false
   end
