@@ -45,7 +45,7 @@ module Enumerable
         break if yield(item) == false
       end
     end
-    (self.length > matching_items.length) ? false : true
+    self.length > matching_items.length ? false : true
   end
 
   def my_any?(test=nil)
@@ -69,7 +69,30 @@ module Enumerable
             end
         end
     end
-    (matching_items.length == 0) ? false : true
+    matching_items.length == 0 ? false : true
   end
-  
+
+  def my_none?(test=nil)
+    matching_items = []
+
+    if (test != nil)
+        self.my_each do |item| 
+            matching_items << item if test === item
+            break if test === item
+        end
+    elsif (block_given? == false)
+        self.my_each do |item| 
+            matching_items << item if item
+            break if item
+        end
+    else
+        self.my_each do |item|
+            matching_items << item if yield(item)
+            break if yield(item)
+        end
+    end
+
+    matching_items.length == 0 ? true : false
+  end
+
 end
