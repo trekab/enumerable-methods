@@ -23,12 +23,12 @@ module Enumerable
     return to_enum(:my_select) unless block_given?
 
     selected_items = []
-    self.my_each { |item| selected_items << item if yield(item) }
+    my_each { |item| selected_items << item if yield(item) }
     selected_items
   end
 
   def my_all?
-    self.my_each { |item| return false unless yield(item) }
+    my_each { |item| return false unless yield(item) }
     true
   end
 
@@ -68,7 +68,7 @@ module Enumerable
 
   def my_inject
     sum = 1
-    self.my_each do |item|
+    my_each do |item|
       sum = yield(sum, item)
     end
     sum
