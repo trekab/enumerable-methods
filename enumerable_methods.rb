@@ -58,8 +58,15 @@ module Enumerable
     mapped_array
   end
 
+  def my_inject
+    sum = 1
+    self.my_each do |item|
+      sum = yield(sum, item)
+    end
+    sum
+  end
 end
 
-arr = (1..20).to_a
-
-p arr.my_map
+def multiply_els(arr)
+  arr.my_inject { |product, item| product * item }
+end
