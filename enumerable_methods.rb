@@ -26,5 +26,27 @@ module Enumerable
     selected_items
   end
 
+  def my_all?(test=nil)
+    matching_items = []
+
+    if (test != nil)
+      self.my_each do |item|
+        matching_items << item if test === item 
+        break if (test === item) == false
+      end
+    elsif (block_given? == false)
+      self.my_each do |item|
+        matching_items << item if item
+        break if item == false
+      end
+    else
+      self.my_each do |item|
+        matching_items << item if yield(item)
+        break if yield(item) == false
+      end
+    end
+    (self.length > matching_items.length) ? false : true
+  end
+
 
 end
