@@ -41,8 +41,18 @@ module Enumerable
     false
   end
 
+  def my_count(obj = nil)
+    count = 0
+    self.my_each do |e|
+      count += 1
+      return count if obj && count == obj
+      return count if block_given? && yield(e)
+    end
+    return count unless block_given?
+  end
+
 end
 
 arr = [4, 'hey', 2, 'Hi there!']
 
-p arr.my_none?{|e| e==99}
+p arr.my_count(4)
