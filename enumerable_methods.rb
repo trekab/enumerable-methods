@@ -51,9 +51,15 @@ module Enumerable
     matching_items.length
   end
 
+  def my_map(&proc)
+    return self.to_enum(:my_map) unless block_given?
+    mapped_array = []
+    self.my_each { |item| mapped_array << proc.call(item) }
+    mapped_array
+  end
+
 end
 
-arr = [4, 'hey', 2, 'Hi there!']
+arr = (1..20).to_a
 
-p arr.my_count(4)
-p arr.count(4)
+p arr.my_map
