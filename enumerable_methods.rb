@@ -1,21 +1,20 @@
+# frozen_string_literal: true
+
 module Enumerable
 
   def my_each
     return self.to_enum unless block_given?
-    for item in self
-      yield(item)
+    i = 0
+    while self[i]
+      yield(self[i])
+      i += 1
     end
     self
   end
 
   def my_each_with_index
     return self.to_enum(:my_each_with_index) unless block_given?
-    i = 0
-    loop do
-      yield(self[i], i)
-      i += 1
-      break if i > self.length - 1
-    end
+    self.my_each { |e| yield(index(e), e) }
     self
   end
 
@@ -26,73 +25,24 @@ module Enumerable
     selected_items
   end
 
-  def my_all?(test=nil)
-    matching_items = []
-
-    if (test != nil)
-      self.my_each do |item|
-        matching_items << item if test === item 
-        break if (test === item) == false
-      end
-    elsif (block_given? == false)
-      self.my_each do |item|
-        matching_items << item if item
-        break if item == false
-      end
-    else
-      self.my_each do |item|
-        matching_items << item if yield(item)
-        break if yield(item) == false
-      end
-    end
-    self.length > matching_items.length ? false : true
+  def my_all?
+    self.my_each { |item| return false unless yield(item) }
+    true
   end
 
-  def my_any?(test=nil)
-    matching_items = []
-
-    if (test != nil)
-        self.my_each do |item|
-            matching_items << item if test === item
-            break if (test === item) == false
-        end
-    elsif block_given? == false
-        self.my_each do |item|
-            matching_items << item if item
-            break if item
-        end
-    else
-        self.my_each do |item| 
-            if yield(item)
-                matching_items << item
-                break
-            end
-        end
-    end
-    matching_items.length == 0 ? false : true
+  def my_any?
+    self.my_each { |item| return true if yield(item) }
+    false
   end
 
-  def my_none?(test=nil)
-    matching_items = []
-
-    if (test != nil)
-        self.my_each do |item| 
-            matching_items << item if test === item
-            break if test === item
-        end
-    elsif (block_given? == false)
-        self.my_each do |item| 
-            matching_items << item if item
-            break if item
-        end
-    else
-        self.my_each do |item|
-            matching_items << item if yield(item)
-            break if yield(item)
-        end
-    end
-
-    matching_items.length == 0 ? true : false
+  def my_none?
+    return true unless block_given?
+    self.my_each { |item| return true unless yield(item) }
+    false
   end
 
 end
+
+arr = [4, 'hey', 2, 'Hi there!']
+
+p arr.my_none?{|e| e==99}
