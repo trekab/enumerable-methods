@@ -80,7 +80,7 @@ module Enumerable
       my_each { |item| sum = sum.method(args[1]).call(item) }
     elsif args.length.zero? && block_given?
       my_each do |item|
-        i == 0 ? sum += item : sum = yield(sum, item) 
+        i.zero? ? sum += item : sum = yield(sum, item)
         i += 1
       end
     elsif args[0].is_a?(Integer) && block_given?
@@ -91,14 +91,14 @@ module Enumerable
         raise TypeError, "#{args[0]} (is neither a symbol nor a string)"
       elsif args[0].is_a?(Symbol)
         my_each do |item|
-          i == 0 ? sum += item : sum = sum.method(args[0]).call(item)
+          i.zero? ? sum += item : sum = sum.method(args[0]).call(item)
           i += 1
         end
       elsif args[0].is_a?(String)
-        operators = [:+, :-, :*, :/, :==, :=~]
+        operators = %i[+ - * / == =~]
         if operators.my_any? { |operator| operator == args[0].to_sym }
           my_each do |item|
-            i == 0 ? sum += item : sum = sum.method(args[0].to_sym).call(item)
+            i.zero? ? sum += item : sum = sum.method(args[0].to_sym).call(item)
             i += 1
           end
         else
