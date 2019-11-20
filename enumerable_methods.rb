@@ -111,5 +111,5 @@ module Enumerable
 end
 
 def multiply_els(arr)
-  arr.my_inject { |product, item| product + item }
+  arr.my_inject { |acc, item| acc * item }
 end
