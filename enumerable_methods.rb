@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Enumerable
+module Enumerable #:nodoc:
   def my_each
     return to_enum unless block_given?
 
