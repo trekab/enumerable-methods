@@ -102,39 +102,29 @@ module Enumerable
   end
 
   def my_inject(*args)
-    initial = 0
-    i = 0
-    raise ArgumentError, 'wrong number of arguments (given 3, expected 0..2)' if args.length > 2
-
-    if args[1].is_a?(Symbol) && args[0].is_a?(Integer)
-      initial = args[0]
-      my_each { |item| initial = initial.method(args[1]).call(item) }
-    elsif args.length.zero? && block_given?
-      my_each do |item|
-        i.zero? ? initial += element : initial = yield(sum, item)
-        i += 1
-      end
-    elsif args[0].is_a?(Integer) && block_given?
-      initial = args[0]
-      my_each { |item| initial = yield(initial, item) }
-    elsif args.length == 1 && !block_given?
-      raise TypeError, "#{args[0]} (is neither a symbol nor a string)" if args[0].class != Symbol && args[0].class != String
-        
-      if args[0].is_a?(Symbol)
-        my_each do |item|
-          i.zero? ? initial += item : initial = initial.method(args[0]).call(item)
-          i += 1
+    my_arr = to_a
+    if block_given?
+      my_arr = dup.to_a
+      result = args[0].nil? ? my_arr[0] : args[0]
+      my_arr.shift if args[0].nil?
+      my_arr.my_each { |number| result = yield(result, number) }
+    elsif !block_given?
+      my_arr = to_a
+      if args[1].nil?
+        symbol = args[0]
+        result = my_arr[0]
+        my_arr[1..-1].my_each do |i|
+          result = result.send(symbol, i)
         end
-      elsif args[0].is_a?(String)
-          operators = %i[:+ :- :* :/ :== :=~]
-          if operators.my_any? { |o| o == args[0].to_sym }
-            my_each { |item| i.zero? ? initial += item : initial = initial.method(args[0].to_sym).call(item)}
-          else
-            raise NoMethodError, "undefined method '#{args[0]}' for 1:Integer"
-          end
+      elsif !args[1].nil?
+        symbol = args[1]
+        result = args[0]
+        my_arr.my_each do |i|
+          result = result.send(symbol, i)
+        end
       end
     end
-    initial
+    result
   end
 end
 
