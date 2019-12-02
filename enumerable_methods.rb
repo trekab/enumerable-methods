@@ -103,17 +103,45 @@ end
   end
 
   def my_inject(*args)
-    init = args.size.positive?
-    acc = init ? args[0] : self[0]
-    drop(init ? 0 : 1).my_each { |item| acc = yield(acc, item) }
-    acc
-  end
+    initial = 0
+    i = 0
+    raise ArgumentError, "wrong number of arguments (given 3, expected 0..2)" if args.length > 2
+
+    if (args[1].is_a?(Symbol) && args[0].is_a?(Integer))
+      initial = args[0]
+        self.my_each { |item| initial = initial.method(args[1]).call(item) }
+    elsif (args.length == 0 && block_given?)
+        self.my_each do |item|
+            (i == 0) ? initial += element : initial = yield(sum, item) 
+            i += 1
+        end
+    elsif (args[0].is_a?(Integer) && block_given?)
+      initial = args[0]
+        self.my_each { |item| initial = yield(initial, item) }
+    elsif (args.length == 1 && block_given? == false)
+        if args[0].class != Symbol && args[0].class != String
+            raise TypeError, "#{args[0]} (is neither a symbol nor a string)"
+        elsif args[0].is_a?(Symbol)
+            self.my_each do |item|
+                (i == 0) ? initial += item : initial = initial.method(args[0]).call(item)
+                i += 1
+            end
+        elsif args[0].is_a?(String)
+            operators = [:+, :-, :*, :/, :==, :=~]
+            if operators.my_any? { |o| o == args[0].to_sym }
+                self.my_each do |item|
+                    (i == 0) ? initial += item : initial = initial.method(args[0].to_sym).call(item)
+                    i += 1
+                end
+            else
+                raise NoMethodError, "undefined method '#{args[0]}' for 1:Integer"
+            end
+        end
+    end
+    initial
+end
 end
 
 def multiply_els(arr)
   arr.my_inject { |acc, item| acc * item }
 end
-
-# p [nil, true, 2].any?(Integer)
-# p [nil, true, 2].my_any?(Integer)
-p [nil, true, 2].my_any?(Integer)
