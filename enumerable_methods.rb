@@ -27,7 +27,7 @@ module Enumerable
     selected_items
   end
 
-  def my_all?(test=nil)
+  def my_all?(test = nil)
     matching_items = []
 
     if !test.nil?
@@ -49,12 +49,29 @@ module Enumerable
     length > matching_items.length ? false : true
   end
 
-  def my_any?
-    return true unless block_given?
+  def my_any?(test = nil)
+    matching_items = []
 
-    my_each { |item| return true if yield(item) }
-    false
-  end
+    if !test.nil?
+      my_each do |item|
+        matching_items << item if test === item
+        break if (test === item) == false
+      end
+    elsif !block_given?
+      my_each do |item|
+        matching_items << item if item
+        break if item
+      end
+    else
+      my_each do |item| 
+        if yield(item)
+          matching_items << item
+          break
+        end
+      end
+    end
+    matching_items.length.zero? ? false : true
+end
 
   def my_none?
     return true unless block_given?
@@ -96,3 +113,7 @@ end
 def multiply_els(arr)
   arr.my_inject { |acc, item| acc * item }
 end
+
+# p [nil, true, 2].any?(Integer)
+# p [nil, true, 2].my_any?(Integer)
+p [nil, true, 2].my_any?(Integer)
