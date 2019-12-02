@@ -128,10 +128,7 @@ module Enumerable
       elsif args[0].is_a?(String)
           operators = %i[:+ :- :* :/ :== :=~]
           if operators.my_any? { |o| o == args[0].to_sym }
-            my_each do |item|
-              i.zero? ? initial += item : initial = initial.method(args[0].to_sym).call(item)
-              i += 1
-            end
+            my_each { |item| i.zero? ? initial += item : initial = initial.method(args[0].to_sym).call(item)}
           else
             raise NoMethodError, "undefined method '#{args[0]}' for 1:Integer"
           end
