@@ -108,20 +108,16 @@ module Enumerable
       result = args[0].nil? ? my_arr[0] : args[0]
       my_arr.shift if args[0].nil?
       my_arr.my_each { |number| result = yield(result, number) }
-    elsif !block_given?
+    else
       my_arr = to_a
       if args[1].nil?
         symbol = args[0]
         result = my_arr[0]
-        my_arr[1..-1].my_each do |i|
-          result = result.send(symbol, i)
-        end
-      elsif !args[1].nil?
+        my_arr[1..-1].my_each { |i| result = result.send(symbol, i) }
+      else
         symbol = args[1]
         result = args[0]
-        my_arr.my_each do |i|
-          result = result.send(symbol, i)
-        end
+        my_arr.my_each { |i| result = result.send(symbol, i) }
       end
     end
     result
