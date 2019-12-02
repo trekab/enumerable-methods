@@ -90,7 +90,6 @@ end
     else
       my_each { |item| matching_items << item if yield(item) }
     end
-
     matching_items.length
   end
 
@@ -109,32 +108,32 @@ end
 
     if (args[1].is_a?(Symbol) && args[0].is_a?(Integer))
       initial = args[0]
-        self.my_each { |item| initial = initial.method(args[1]).call(item) }
+      self.my_each { |item| initial = initial.method(args[1]).call(item) }
     elsif (args.length == 0 && block_given?)
         self.my_each do |item|
-            (i == 0) ? initial += element : initial = yield(sum, item) 
-            i += 1
+          (i == 0) ? initial += element : initial = yield(sum, item) 
+          i += 1
         end
     elsif (args[0].is_a?(Integer) && block_given?)
       initial = args[0]
-        self.my_each { |item| initial = yield(initial, item) }
+      self.my_each { |item| initial = yield(initial, item) }
     elsif (args.length == 1 && block_given? == false)
         if args[0].class != Symbol && args[0].class != String
-            raise TypeError, "#{args[0]} (is neither a symbol nor a string)"
+          raise TypeError, "#{args[0]} (is neither a symbol nor a string)"
         elsif args[0].is_a?(Symbol)
-            self.my_each do |item|
-                (i == 0) ? initial += item : initial = initial.method(args[0]).call(item)
-                i += 1
-            end
+          self.my_each do |item|
+            (i == 0) ? initial += item : initial = initial.method(args[0]).call(item)
+            i += 1
+          end
         elsif args[0].is_a?(String)
             operators = [:+, :-, :*, :/, :==, :=~]
             if operators.my_any? { |o| o == args[0].to_sym }
-                self.my_each do |item|
-                    (i == 0) ? initial += item : initial = initial.method(args[0].to_sym).call(item)
-                    i += 1
-                end
+              self.my_each do |item|
+                (i == 0) ? initial += item : initial = initial.method(args[0].to_sym).call(item)
+                i += 1
+              end
             else
-                raise NoMethodError, "undefined method '#{args[0]}' for 1:Integer"
+              raise NoMethodError, "undefined method '#{args[0]}' for 1:Integer"
             end
         end
     end
