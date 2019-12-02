@@ -46,7 +46,7 @@ module Enumerable
         break if yield(item) == false
       end
     end
-    !(length > matching_items.length)
+    length <= matching_items.length
   end
 
   def my_any?(test = nil)
@@ -110,35 +110,35 @@ module Enumerable
       initial = args[0]
       my_each { |item| initial = initial.method(args[1]).call(item) }
     elsif args.length.zero? && block_given?
-        my_each do |item|
-          i.zero?  ? initial += element : initial = yield(sum, item) 
-          i += 1
-        end
+      my_each do |item|
+        i.zero? ? initial += element : initial = yield(sum, item)
+        i += 1
+      end
     elsif args[0].is_a?(Integer) && block_given?
       initial = args[0]
       my_each { |item| initial = yield(initial, item) }
     elsif args.length == 1 && !block_given?
-        if args[0].class != Symbol && args[0].class != String
-          raise TypeError, "#{args[0]} (is neither a symbol nor a string)"
-        elsif args[0].is_a?(Symbol)
-          my_each do |item|
-            (i == 0) ? initial += item : initial = initial.method(args[0]).call(item)
-            i += 1
-          end
-        elsif args[0].is_a?(String)
-            operators = [:+, :-, :*, :/, :==, :=~]
-            if operators.my_any? { |o| o == args[0].to_sym }
-              my_each do |item|
-                i.zero? ? initial += item : initial = initial.method(args[0].to_sym).call(item)
-                i += 1
-              end
-            else
-              raise NoMethodError, "undefined method '#{args[0]}' for 1:Integer"
-            end
+      raise TypeError, "#{args[0]} (is neither a symbol nor a string)" if args[0].class != Symbol && args[0].class != String
+        
+      if args[0].is_a?(Symbol)
+        my_each do |item|
+          i.zero? ? initial += item : initial = initial.method(args[0]).call(item)
+          i += 1
         end
+      elsif args[0].is_a?(String)
+          operators = %i[:+ :- :* :/ :== :=~]
+          if operators.my_any? { |o| o == args[0].to_sym }
+            my_each do |item|
+              i.zero? ? initial += item : initial = initial.method(args[0].to_sym).call(item)
+              i += 1
+            end
+          else
+            raise NoMethodError, "undefined method '#{args[0]}' for 1:Integer"
+          end
+      end
     end
     initial
-end
+  end
 end
 
 def multiply_els(arr)
