@@ -49,28 +49,9 @@ module Enumerable
     length <= matching_items.length
   end
 
-  def my_any?(test = nil)
-    matching_items = []
-
-    if !test.nil?
-      my_each do |item|
-        matching_items << item if test === item
-        break if (test === item) == false
-      end
-    elsif !block_given?
-      my_each do |item|
-        matching_items << item if item
-        break if item
-      end
-    else
-      my_each do |item|
-        if yield(item)
-          matching_items << item
-          break
-        end
-      end
-    end
-    matching_items.length.zero? ? false : true
+  def my_any?
+    my_each { |num| return true if yield(num) }
+    false
   end
 
   def my_none?
