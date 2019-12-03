@@ -49,8 +49,10 @@ module Enumerable
     length <= matching_items.length
   end
 
-  def my_any?
-    my_each { |num| return true if yield(num) }
+  def my_any?(arg = nil)
+    return false if self.size < 1 
+    return true unless block_given?
+    my_each { |x| return true if yield(x)}
     false
   end
 
