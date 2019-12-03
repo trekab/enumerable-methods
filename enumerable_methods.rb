@@ -28,7 +28,7 @@ module Enumerable
   end
 
   def my_all?(*arg)
-    return self.grep(arg.first).length == self.size unless arg.empty?
+    return grep(arg.first).length == self.size unless arg.empty?
 
     my_each { |i| return false unless yield(i) } if block_given?
     my_each { |i| return false unless i } unless block_given?
@@ -38,6 +38,7 @@ module Enumerable
   def my_any?(args = nil)
     my_each { |num| return true if yield(num) }
     return true unless args.nil?
+    
     false
   end
 
