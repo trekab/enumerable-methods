@@ -35,7 +35,7 @@ module Enumerable
     true
   end
 
-  def my_any?(args = nil)
+  def my_any?(*args)
     return !grep(arg.first).empty? unless arg.empty?
 
     my_each { |i| return true if yield(i) } if block_given?
@@ -45,11 +45,14 @@ module Enumerable
     false
   end
 
-  def my_none?
-    return true unless block_given?
+  def my_none?(*arg)
+    return grep(arg.first).empty? unless arg.empty?
 
-    my_each { |item| return true unless yield(item) }
-    false
+    my_each { |i| return false if yield(i) } if block_given?
+
+    my_each { |i| return false if i } unless block_given?
+
+    true
   end
 
   def my_count(arg = nil)
