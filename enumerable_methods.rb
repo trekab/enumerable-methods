@@ -27,8 +27,8 @@ module Enumerable
     selected_items
   end
 
-  def my_all?(*arg)
-    return grep(arg.first).length == size unless arg.empty?
+  def my_all?(*args)
+    return grep(args.first).length == size unless args.empty?
 
     my_each { |i| return false unless yield(i) } if block_given?
     my_each { |i| return false unless i } unless block_given?
@@ -36,7 +36,7 @@ module Enumerable
   end
 
   def my_any?(*args)
-    return !grep(arg.first).empty? unless arg.empty?
+    return !grep(args.first).empty? unless args.empty?
 
     my_each { |i| return true if yield(i) } if block_given?
 
@@ -45,8 +45,8 @@ module Enumerable
     false
   end
 
-  def my_none?(*arg)
-    return grep(arg.first).empty? unless arg.empty?
+  def my_none?(*args)
+    return grep(args.first).empty? unless args.empty?
 
     my_each { |i| return false if yield(i) } if block_given?
 
