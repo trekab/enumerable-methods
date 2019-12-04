@@ -15,7 +15,11 @@ module Enumerable
   def my_each_with_index
     return to_enum(:my_each_with_index) unless block_given?
 
-    my_each { |e| yield(e, index(e)) }
+    i = 0
+    while i <= length - 1
+      yield(self[i], i)
+      i += 1
+    end
     self
   end
 
