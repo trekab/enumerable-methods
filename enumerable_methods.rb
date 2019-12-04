@@ -49,26 +49,12 @@ module Enumerable
     length <= matching_items.length
   end
 
-  def my_any?(test = nil)
-    matching_items = []
+  def my_any?(*args)
+    return !grep(args.first).empty? unless args.empty?
 
-    if !test.nil?
-      my_each do |item|
-        matching_items << item unless test === item # rubocop:disable Style/CaseEquality
-        break unless (test === item) == false # rubocop:disable Style/CaseEquality
-      end
-    elsif block_given? == false
-      my_each do |item|
-        matching_items << item unless item
-        break if item == false
-      end
-    else
-      my_each do |item|
-        matching_items << item unless yield(item)
-        break if yield(item) == false
-      end
-    end
-    length > matching_items.length
+    my_each { |i| return true if yield(i) } if block_given?
+    my_each { |i| return true if i } unless block_given?
+    false
   end
 
   def my_none?(*args)
