@@ -4,7 +4,7 @@ module Enumerable
   def my_each
     return to_enum(:my_each) unless block_given?
 
-    0.upto(size - 1) { |index| yield(self.to_a[index]) }
+    0.upto(size - 1) { |index| yield(to_a[index]) }
     self
   end
 
