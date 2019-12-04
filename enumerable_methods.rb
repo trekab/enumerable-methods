@@ -130,12 +130,3 @@ end
 def multiply_els(arr)
   arr.my_inject { |acc, item| acc * item }
 end
-
-p %w{ant bear cat}.none? { |word| word.length == 5 } == %w{ant bear cat}.my_none? { |word| word.length == 5 }
-p %w{ant bear cat}.none? { |word| word.length >= 4 } == %w{ant bear cat}.my_none? { |word| word.length >= 4 }
-p %w{ant bear cat}.none?(/d/) == %w{ant bear cat}.my_none?(/d/)
-p [1, 3.14, 42].none?(Float) == [1, 3.14, 42].my_none?(Float)
-p [].none? == [].my_none?
-p [nil].none? == [nil].my_none?
-p [nil, false].none? == [nil, false].my_none?
-p [nil, false, true].none? == [nil, false, true].my_none?
