@@ -31,21 +31,33 @@ module Enumerable
     selected_items
   end
 
-  def my_all?(*args)
-    return grep(args.first).length == size unless args.empty?
+  def my_all?(test = nil)
+    matching_items = []
 
-    my_each { |i| return false unless yield(i) } if block_given?
-    my_each { |i| return false unless i } unless block_given?
-    true
+    if !test.nil?
+      my_each do |item|
+        matching_items << item if test === item # rubocop:disable Style/CaseEquality
+        break if (test === item) == false # rubocop:disable Style/CaseEquality
+      end
+    elsif block_given? == false
+      my_each do |item|
+        matching_items << item if item
+        break if item == false
+      end
+    else
+      my_each do |item|
+        matching_items << item if yield(item)
+        break if yield(item) == false
+      end
+    end
+    length <= matching_items.length
   end
 
   def my_any?(*args)
     return !grep(args.first).empty? unless args.empty?
 
     my_each { |i| return true if yield(i) } if block_given?
-
     my_each { |i| return true if i } unless block_given?
-
     false
   end
 
@@ -53,9 +65,7 @@ module Enumerable
     return grep(args.first).empty? unless args.empty?
 
     my_each { |i| return false if yield(i) } if block_given?
-
     my_each { |i| return false if i } unless block_given?
-
     true
   end
 
@@ -106,3 +116,10 @@ end
 def multiply_els(arr)
   arr.my_inject { |acc, item| acc * item }
 end
+
+p %w[ant bear cat].all? { |word| word.length >= 3 } == %w[ant bear cat].my_all? { |word| word.length >= 3 }
+p %w[ant bear cat].all? { |word| word.length >= 4 } == %w[ant bear cat].my_all? { |word| word.length >= 4 }
+p %w[ant bear cat].all?(/t/) == %w[ant bear cat].my_all?(/t/)
+p [1, 2i, 3.14].all?(Numeric) == [1, 2i, 3.14].my_all?(Numeric)
+p [nil, true, 99].all? == [nil, true, 99].my_all?
+p [].all? == [].my_all?
