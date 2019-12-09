@@ -139,11 +139,11 @@ describe(Enumerable) do
   describe('#my_none?') do
     context('when called with only a block') do
       it('returns true if no elements in the array yield true; otherwise, false') do
-        expect(example_array.my_none? { test_block }).to(eql(example_array.none?{ test_block }))
+        expect(example_array.my_none? { test_block }).to(eql(example_array.none? { test_block }))
       end
 
       it('returns true if no elements in the range yield true; otherwise, false') do
-        expect(example_range.my_none? { test_block }).to(eql(example_range.none?{ test_block }))
+        expect(example_range.my_none? { test_block }).to(eql(example_range.none? { test_block }))
       end
     end
 
@@ -174,6 +174,48 @@ describe(Enumerable) do
 
       it('returns false if the range contains at least one truthy value; otherwise, true') do
         expect(example_range.my_none?).to(eql(example_range.none?))
+      end
+    end
+  end
+
+  describe('#my_count') do
+    context('when called with only a block') do
+      it('returns the number of elements in the array for which the given block yields true') do
+        expect(example_array.my_count { test_block }).to(eql(example_array.count { test_block }))
+      end
+
+      it('returns the number of elements in the range for which the given block yields true') do
+        expect(example_range.my_count { test_block }).to(eql(example_range.count { test_block }))
+      end
+    end
+
+    context('when called with only an argument') do
+      it('returns the number of elements in the array that equals the given argument') do
+        expect(example_array.my_count(rand_num)).to(eql(example_array.count(rand_num)))
+      end
+
+      it('returns the number of elements in the range that equals the given argument') do
+        expect(example_range.my_count(rand_num)).to(eql(example_range.count(rand_num)))
+      end
+    end
+
+    context('when called with a block and an argument') do
+      it('neglects the block and use the argument') do
+        expect(example_array.my_count(rand_num) { test_block }).to(eql(example_array.count(rand_num) { test_block }))
+      end
+
+      it('neglects the block and use the argument') do
+        expect(example_range.my_count(rand_num) { test_block }).to(eql(example_range.count(rand_num) { test_block }))
+      end
+    end
+
+    context('when called with no block and no argument') do
+      it('returns the number of elements in the array') do
+        expect(example_array.my_count).to(eql(example_array.count))
+      end
+
+      it('returns the number of elements in the range') do
+        expect(example_range.my_count).to(eql(example_range.count))
       end
     end
   end
