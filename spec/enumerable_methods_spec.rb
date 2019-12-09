@@ -51,4 +51,46 @@ describe(Enumerable) do
       end
     end
   end
+
+  describe('#my_all?') do
+    context('when called with only a block') do
+      it('returns true if all elements in the array yield true; otherwise, false') do
+        expect(example_array.my_all? { test_block }).to(eql(example_array.all?{test_block}))
+      end
+
+      it('returns true if all elements in the range yield true; otherwise, false') do
+        expect(example_range.my_all? { test_block }).to(eql(example_range.all?{test_block}))
+      end
+    end
+
+    context('when called with only an argument') do
+      it('returns true if the argument equals all the elements in the array; otherwise, false') do
+        expect(example_array.my_all?(rand_num)).to(eql(example_array.all?(rand_num)))
+      end
+
+      it('returns true if the argument equals all the elements in the range; otherwise, false') do
+        expect(example_range.my_all?(rand_num)).to(eql(example_range.all?(rand_num)))
+      end
+    end
+
+    context('when called with a block and an argument') do
+      it('neglects the block and use the argument') do
+        expect(example_array.my_all?(rand_num) {test_block}).to(eql(example_array.all?(rand_num) {test_block}))
+      end
+
+      it('neglects the block and use the argument') do
+        expect(example_range.my_all?(rand_num) {test_block}).to(eql(example_range.all?(rand_num) {test_block}))
+      end
+    end
+
+    context('when called with no block and no argument') do
+      it('returns true if all element of the array are truthy; otherwise, false') do
+        expect(example_array.my_all?).to(eql(example_array.all?))
+      end
+
+      it('returns true if all element in the range are truthy; otherwise, false') do
+        expect(example_range.my_all?).to(eql(example_range.all?))
+      end
+    end
+  end
 end
