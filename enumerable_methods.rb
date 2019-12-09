@@ -28,11 +28,11 @@ module Enumerable
   end
 
   def my_all?(*arg)
-    return self.grep(arg.first).length == self.size unless arg.empty?
+    return grep(arg.first).length == size unless arg.empty?
 
-    self.my_each { |el| return false unless yield(el) } if block_given?
+    my_each { |el| return false unless yield(el) } if block_given?
 
-    self.my_each { |el| return false unless el } unless block_given?
+    my_each { |el| return false unless el } unless block_given?
 
     true
   end
