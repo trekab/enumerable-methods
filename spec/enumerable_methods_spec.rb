@@ -135,4 +135,46 @@ describe(Enumerable) do
       end
     end
   end
+
+  describe('#my_none?') do
+    context('when called with only a block') do
+      it('returns true if no elements in the array yield true; otherwise, false') do
+        expect(example_array.my_none? { test_block }).to(eql(example_array.none?{ test_block }))
+      end
+
+      it('returns true if no elements in the range yield true; otherwise, false') do
+        expect(example_range.my_none? { test_block }).to(eql(example_range.none?{ test_block }))
+      end
+    end
+
+    context('when called with only an argument') do
+      it('returns true if the argument does not equals any of the elements in the array; otherwise, false') do
+        expect(example_array.my_none?(rand_num)).to(eql(example_array.none?(rand_num)))
+      end
+
+      it('returns true if the argument does not equals any of the elements in the range; otherwise, false') do
+        expect(example_range.my_none?(rand_num)).to(eql(example_range.none?(rand_num)))
+      end
+    end
+
+    context('when called with a block and an argument') do
+      it 'neglects the block and use the argument' do
+        expect(example_array.my_none?(rand_num) { test_block }).to(eql(example_array.none?(rand_num) { test_block }))
+      end
+
+      it('neglects the block and use the argument') do
+        expect(example_range.my_none?(rand_num) { test_block }).to(eql(example_range.none?(rand_num) { test_block }))
+      end
+    end
+
+    context('when called with no block and no argument') do
+      it('returns false if the array contains at least one truthy value; otherwise, true') do
+        expect(example_array.my_none?).to(eql(example_array.none?))
+      end
+
+      it('returns false if the range contains at least one truthy value; otherwise, true') do
+        expect(example_range.my_none?).to(eql(example_range.none?))
+      end
+    end
+  end
 end
