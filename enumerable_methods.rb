@@ -27,26 +27,14 @@ module Enumerable
     selected_items
   end
 
-  def my_all?(test = nil)
-    matching_items = []
+  def my_all?(*arg)
+    return grep(arg.first).length == size unless arg.empty?
 
-    if !test.nil?
-      my_each do |item|
-        matching_items << item if test === item # rubocop:disable Style/CaseEquality
-        break if (test === item) == false # rubocop:disable Style/CaseEquality
-      end
-    elsif block_given? == false
-      my_each do |item|
-        matching_items << item if item
-        break if item == false
-      end
-    else
-      my_each do |item|
-        matching_items << item if yield(item)
-        break if yield(item) == false
-      end
-    end
-    length <= matching_items.length
+    my_each { |el| return false unless yield(el) } if block_given?
+
+    my_each { |el| return false unless el } unless block_given?
+
+    true
   end
 
   def my_any?(*args)
